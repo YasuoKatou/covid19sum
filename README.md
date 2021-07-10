@@ -6,7 +6,7 @@
 
 ## 参照データベース  
 
-新型コロナウィルスのデータは、[covid19Data](https://github.com/YasuoKatou/covid19Data)プロジェクトを使用して登録するう
+新型コロナウィルスのデータは、[covid19Data](https://github.com/YasuoKatou/covid19Data)プロジェクトを使用して登録する。
 
 
 ## グラフツール

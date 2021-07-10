@@ -1,0 +1,20 @@
+h3 {
+    /*color:orange;*/
+    text-align: center;
+}
+
+label {
+    white-space: nowrap;    /* 途中改行を抑止 */
+}
+
+.form_init {
+    display: none;
+}
+
+.ui-menu { width: 150px; }
+
+.menu-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: baseline;
+}

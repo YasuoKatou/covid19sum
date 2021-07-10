@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <title>COVID19</title>
+        {% load static %}
+        <link rel="stylesheet" type="text/css" href="{% static 'covid19sum/css/style.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'covid19sum/css/jquery/ui/jquery-ui.css' %}">
+    </head>
+    <body>
+        <section id="charWrap" height="400px">
+            <canvas id="chart01" width="200px" height="400px"></canvas>
+        </section>
+        <form action="" method="GET" id="area_form" class="form_init">
+            <section class="menu-container">
+            <ul id="menu_graph">
+                {% if graph_type == "line" %}
+                <li data-graph_type="line"><div><span class="ui-icon ui-icon-check"></span>累計(line)</div></li>
+                {% else %}
+                <li data-graph_type="line"><div>累計(line)</div></li>
+                {% endif %}
+                {% if graph_type == "bar" %}
+                <li data-graph_type="bar"><div><span class="ui-icon ui-icon-check"></span>発生(bar)</div></li>
+                {% else %}
+                <li data-graph_type="bar"><div>発生(bar)</div></li>
+                {% endif %}
+            </ul>
+            <ul id="menu_area">
+                {% for area_group in area_all %}
+                <li><div>{{ area_group.title }}</div>
+                    <ul>
+                        {% for area in area_group.data %}
+                        <li data-area_code="{{ area.area_code }}"><div>{{ area.area_name }}</div></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endfor %}
+            </ul>
+            </section>
+            <input type="hidden" name="area_code" value="{{ area_code }}">
+            <input type="hidden" name="graph_type" value="{{ graph_type }}">
+        </form>
+        <script>
+            var covid_data;
+            covid_data = JSON.parse('{{ covid_data|safe }}');
+        </script>
+        <script src="{% static 'covid19sum/js/jquery/jquery-3.6.0.min.js' %}"></script>
+        <script src="{% static 'covid19sum/js/jquery/ui/jquery-ui.js' %}"></script>
+        <script src="{% static 'covid19sum/js/chart.js' %}"></script>
+        {% if graph_type == "line" %}
+        <script src="{% static 'covid19sum/js/line_chart01.js' %}"></script>
+        {% endif %}
+        {% if graph_type == "bar" %}
+        <script src="{% static 'covid19sum/js/bar_chart01.js' %}"></script>
+        {% endif %}
+        <script src="{% static 'covid19sum/js/summary.js' %}"></script>
+    </body>
+</html>

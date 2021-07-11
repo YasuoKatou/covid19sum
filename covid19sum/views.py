@@ -1,6 +1,6 @@
 import datetime
 import json
-from dateutil.relativedelta import relativedelta
+#from dateutil.relativedelta import relativedelta
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import render
@@ -23,7 +23,8 @@ def _getCovid19DataA(areaCode):
     #データ取得期間
     d2 = datetime.datetime.now()        # to (= today)
     s2 = d2.strftime('%Y-%m-%d')
-    d1 = d2 - relativedelta(months=6)   # from (-6 month)
+    #d1 = d2 - relativedelta(months=6)   # from (-6 month)
+    d1 = d2 - datetime.timedelta(days=180)   # from (-6 month)
     s1 = d1.strftime('%Y-%m-%d')
     #全国データの取得
     gd1 = None
@@ -56,7 +57,8 @@ def _getCovid19DataB(areaCode):
     #データ取得期間
     d2 = datetime.datetime.now()        # to (= today)
     s2 = d2.strftime('%Y-%m-%d')
-    d1 = d2 - relativedelta(months=3)   # from (-3 month)
+    #d1 = d2 - relativedelta(months=3)   # from (-3 month)
+    d1 = d2 - datetime.timedelta(days=90)   # from (-3 month)
     s1 = d1.strftime('%Y-%m-%d')
     #全国データの取得
     gd1 = None

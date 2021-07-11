@@ -2,14 +2,14 @@
 
 ## リリースするアプリケーション  
 
-* 新型コロナウイルスの感染者数をグラフ化
+* 新型コロナウイルスの感染者数をグラフ化（[サンプルサイト](https://yk2021.pythonanywhere.com/covid19sum/)）
 
 ## 変更履歴  
 * python-dateutilの利用を止める。pythonanywhereでimportエラーとなるため（2021/7/11)
 
 ## 参照データベース  
 
-新型コロナウィルスのデータは、[covid19Data](https://github.com/YasuoKatou/covid19Data)プロジェクトを使用して登録する。
+新型コロナウィルスのデータは、[covid19Data](https://github.com/YasuoKatou/covid19Data)プロジェクトを使用して登録する（このプロジェクトにDBは含まれていません）。
 
 
 ### グラフツール

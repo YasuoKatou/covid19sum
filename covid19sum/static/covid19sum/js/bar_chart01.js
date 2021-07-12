@@ -13,6 +13,7 @@
       label: covid_data.area_jp.title,
       data: covid_data.area_jp.data,
       backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      hidden: true,
     }]
   };
 

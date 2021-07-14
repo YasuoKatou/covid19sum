@@ -21,7 +21,7 @@ def _getCovid19DataA(areaCode):
     v = _getResponseBase(areaCode)
 
     #データ取得期間
-    d2 = datetime.datetime.now()        # to (= today)
+    d2 = DaillyPatients.getLastTargetDate()
     s2 = d2.strftime('%Y-%m-%d')
     #d1 = d2 - relativedelta(months=6)   # from (-6 month)
     d1 = d2 - datetime.timedelta(days=180)   # from (-6 month)
@@ -55,7 +55,7 @@ def _getCovid19DataB(areaCode):
     v = _getResponseBase(areaCode)
 
     #データ取得期間
-    d2 = datetime.datetime.now()        # to (= today)
+    d2 = DaillyPatients.getLastTargetDate()
     s2 = d2.strftime('%Y-%m-%d')
     #d1 = d2 - relativedelta(months=3)   # from (-3 month)
     d1 = d2 - datetime.timedelta(days=90)   # from (-3 month)

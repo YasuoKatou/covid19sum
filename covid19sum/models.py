@@ -18,6 +18,9 @@ class DaillyPatients(models.Model):
         db_table = 'dailly_patients'
         unique_together = (('target_date', 'area_code'),)
 
+    def getLastTargetDate():
+        d = DaillyPatients.objects.all().aggregate(models.Max('target_date'))
+        return d['target_date__max']
 
 class Summary(models.Model):
     last_update = models.DateField()

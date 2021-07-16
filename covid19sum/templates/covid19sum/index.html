@@ -13,6 +13,18 @@
         </section>
         <form action="" method="GET" id="area_form" class="form_init">
             <section class="menu-container">
+            <ul id="menu_span">
+                {% if data_span == "1" %}
+                <li data-data_span="1"><div><span class="ui-icon ui-icon-check"></span>日毎</div></li>
+                {% else %}
+                <li data-data_span="1"><div>日毎</div></li>
+                {% endif %}
+                {% if data_span == "7" %}
+                <li data-data_span="7"><div><span class="ui-icon ui-icon-check"></span>週間</div></li>
+                {% else %}
+                <li data-data_span="7"><div>週間</div></li>
+                {% endif %}
+            </ul>
             <ul id="menu_graph">
                 {% if graph_type == "line" %}
                 <li data-graph_type="line"><div><span class="ui-icon ui-icon-check"></span>累計(line)</div></li>
@@ -39,6 +51,7 @@
             </section>
             <input type="hidden" name="area_code" value="{{ area_code }}">
             <input type="hidden" name="graph_type" value="{{ graph_type }}">
+            <input type="hidden" name="data_span" value="{{ data_span }}">
         </form>
         <script>
             var covid_data;

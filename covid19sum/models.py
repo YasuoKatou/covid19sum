@@ -14,13 +14,16 @@ class DaillyPatients(models.Model):
     area_code = models.CharField(max_length=10)
     patients = models.BigIntegerField()
 
+    weekDayConv = [2, 3, 4, 5, 6, 7, 1]
+
     class Meta:
         db_table = 'dailly_patients'
         unique_together = (('target_date', 'area_code'),)
 
     def getLastTargetDate():
         d = DaillyPatients.objects.all().aggregate(models.Max('target_date'))
-        return d['target_date__max']
+        d1 = d['target_date__max']
+        return d1, DaillyPatients.weekDayConv[d1.weekday()]
 
 class Summary(models.Model):
     last_update = models.DateField()

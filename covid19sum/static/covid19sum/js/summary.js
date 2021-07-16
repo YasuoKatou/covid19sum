@@ -19,7 +19,17 @@ $(window).on('load', function() {
             } catch (error) {
                 alert(error);
             }
-    }
+        }
+    });
+    $( "#menu_span" ).menu({
+        select: function( event, ui ) {
+            try {
+                $('input[name="data_span"]').val(ui.item[0].dataset.data_span);
+                $('#area_form').submit();
+            } catch (error) {
+                alert(error);
+            }
+        }
     });
     // フォーム（メニュー）を表示する
     $( "#area_form" ).removeClass( "form_init" );

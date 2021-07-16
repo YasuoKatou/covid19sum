@@ -8,6 +8,7 @@ from .models import DaillyPatients
 from covid19sum.const.area import getAreaName, getAreaGroup
 
 _DEFAULT_GRAPH_TYPE = 'line'
+_DEFAULT_DATA_SPAN  = '1'
 _DEFAULT_AREA_CODE = '400009'   # Fukuoka
 
 def _getResponseBase(areaCode):
@@ -17,20 +18,32 @@ def _getResponseBase(areaCode):
             'area_code': areaCode,
            }
 
-def _getCovid19DataA(areaCode):
+def _getGraphData(ac, f, t, wd=None):
+    where = Q(area_code=ac)
+    where.add(Q(target_date__gte=f), Q.AND)
+    where.add(Q(target_date__lte=t), Q.AND)
+    if wd:
+        where.add(Q(target_date__week_day=wd), Q.AND)
+    return DaillyPatients.objects.filter(where).order_by('target_date')
+
+
+def _getCovid19DataA(areaCode, span):
     v = _getResponseBase(areaCode)
 
     #データ取得期間
-    d2 = DaillyPatients.getLastTargetDate()
+    d2, wd = DaillyPatients.getLastTargetDate()
     s2 = d2.strftime('%Y-%m-%d')
-    #d1 = d2 - relativedelta(months=6)   # from (-6 month)
-    d1 = d2 - datetime.timedelta(days=180)   # from (-6 month)
+    md = 175 if span == '1' else 175 * 3
+    d1 = d2 - datetime.timedelta(days=md)   # from (-6 month)
     s1 = d1.strftime('%Y-%m-%d')
     #全国データの取得
+    if span == '7':
+        r = _getGraphData('JP', s1, s2, wd)
+    else:
+        r = _getGraphData('JP', s1, s2)
     gd1 = None
     gd2 = None
     data = []
-    r  = DaillyPatients.objects.filter(Q(target_date__gt=s1) & Q(target_date__lte=s2) & Q(area_code='JP')).order_by('target_date')
     for d in r:
         if d.target_date.day == 1:
             v['labels'].append('%d/%d' % (d.target_date.month, d.target_date.day))
@@ -43,7 +56,10 @@ def _getCovid19DataA(areaCode):
     gd2 = list(r)[-1].target_date.strftime('%Y/%m/%d')
     v['graph_title'] = '累計感染者数 (%s - %s)' % (gd1, gd2, )
     #都道府県データの取得
-    r  = DaillyPatients.objects.filter(Q(target_date__gt=s1) & Q(target_date__lte=s2) & Q(area_code=areaCode)).order_by('target_date')
+    if span == '7':
+        r = _getGraphData(areaCode, s1, s2, wd)
+    else:
+        r = _getGraphData(areaCode, s1, s2)
     data = []
     for d in r:
         data.append(d.patients)
@@ -51,20 +67,23 @@ def _getCovid19DataA(areaCode):
 
     return v
 
-def _getCovid19DataB(areaCode):
+def _getCovid19DataB(areaCode, span):
     v = _getResponseBase(areaCode)
 
     #データ取得期間
-    d2 = DaillyPatients.getLastTargetDate()
+    d2, wd = DaillyPatients.getLastTargetDate()
     s2 = d2.strftime('%Y-%m-%d')
-    #d1 = d2 - relativedelta(months=3)   # from (-3 month)
-    d1 = d2 - datetime.timedelta(days=90)   # from (-3 month)
+    md = 91 if span == '1' else 91 * 3
+    d1 = d2 - datetime.timedelta(days=md)   # from (-3 month)
     s1 = d1.strftime('%Y-%m-%d')
     #全国データの取得
+    if span == '7':
+        r = _getGraphData('JP', s1, s2, wd)
+    else:
+        r = _getGraphData('JP', s1, s2)
     gd1 = None
     gd2 = None
     data1 = []
-    r  = DaillyPatients.objects.filter(Q(target_date__gt=s1) & Q(target_date__lte=s2) & Q(area_code='JP')).order_by('target_date')
     wk = None
     for d in r:
         if not wk:
@@ -81,7 +100,10 @@ def _getCovid19DataB(areaCode):
     gd2 = list(r)[-1].target_date.strftime('%Y/%m/%d')
     v['graph_title'] = '日毎の新規感染者数 (%s - %s)' % (gd1, gd2, )
     #都道府県データの取得
-    r  = DaillyPatients.objects.filter(Q(target_date__gt=s1) & Q(target_date__lte=s2) & Q(area_code=areaCode)).order_by('target_date')
+    if span == '7':
+        r = _getGraphData(areaCode, s1, s2, wd)
+    else:
+        r = _getGraphData(areaCode, s1, s2)
     data2 = []
     wk = None
     for d in r:
@@ -110,8 +132,10 @@ def _getAreaAll():
 def _getLineChartData(request):
     area_code = request.GET.get(key="area_code", default=_DEFAULT_AREA_CODE)
     graph_type = request.GET.get(key="graph_type", default=_DEFAULT_GRAPH_TYPE)
-    return {'covid_data': json.dumps(_getCovid19DataA(area_code)),
+    data_span = request.GET.get(key="data_span", default=_DEFAULT_DATA_SPAN)
+    return {'covid_data': json.dumps(_getCovid19DataA(area_code, data_span)),
             'graph_type' : graph_type,
+            'data_span' : data_span,
             'area_code' : area_code,
             'area_all': _getAreaAll(),
            }
@@ -119,8 +143,10 @@ def _getLineChartData(request):
 def _getBarChartData(request):
     area_code = request.GET.get(key="area_code", default=_DEFAULT_AREA_CODE)
     graph_type = request.GET.get(key="graph_type", default=_DEFAULT_GRAPH_TYPE)
-    return {'covid_data': json.dumps(_getCovid19DataB(area_code)),
+    data_span = request.GET.get(key="data_span", default=_DEFAULT_DATA_SPAN)
+    return {'covid_data': json.dumps(_getCovid19DataB(area_code, data_span)),
             'graph_type' : graph_type,
+            'data_span' : data_span,
             'area_code' : area_code,
             'area_all': _getAreaAll(),
            }

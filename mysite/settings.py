@@ -75,12 +75,13 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    'default': {},
+    'covid19sum': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'covid19.db',
     }
 }
-
+DATABASE_ROUTERS = ['covid19sum.db_router.DBRouter']
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

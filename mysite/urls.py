@@ -19,5 +19,6 @@ from django.urls import include, path
 urlpatterns = [
     path('', include('covid19sum.urls')),
     path('covid19sum/', include('covid19sum.urls')),
-    path('admin/', admin.site.urls),
+    path('polls/', include('polls.urls')),
+    path('polls_admin/', admin.site.urls),
 ]
